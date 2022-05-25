@@ -9,9 +9,15 @@ class MainPageProvider with ChangeNotifier {
   final folderController = TextEditingController();
   final extensionsController = TextEditingController();
   List<File> pendingFiles = [];
+  List<FileCount> fileLines = [];
   int totalFiles = 0;
 
-  List<FileCount> fileLines = [];
+  bool _useAbsolute = false;
+  bool get useAbsolute => _useAbsolute;
+  set useAbsolute(bool useAbsolute) {
+    _useAbsolute = useAbsolute;
+    notifyListeners();
+  }
 
   bool _isScanning = false;
   bool get isScanning => _isScanning;

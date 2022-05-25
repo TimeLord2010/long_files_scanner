@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:long_files_scanner/models/file_count.dart';
 import 'package:long_files_scanner/ui/main_page_provider.dart';
 import 'package:long_files_scanner/utils/file.dart';
 import 'package:macos_ui/macos_ui.dart';
@@ -25,6 +26,15 @@ class MainPage extends StatelessWidget {
                       controller: value.extensionsController,
                       placeholder: 'dart, py, cs, ...',
                     ),
+                  ),
+                  const Spacer(),
+                  const Text('Use absolute path'),
+                  const SizedBox(width: 10),
+                  MacosSwitch(
+                    value: value.useAbsolute,
+                    onChanged: (v) {
+                      context.read<MainPageProvider>().useAbsolute = v;
+                    },
                   ),
                 ],
               ),
@@ -62,20 +72,7 @@ class MainPage extends StatelessWidget {
                   itemCount: value.fileLines.length,
                   itemBuilder: (context, index) {
                     var item = value.fileLines[index];
-                    var filePath = value.filterDirPath(item.file);
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 12, 4),
-                      child: Row(
-                        children: [
-                          MacosTooltip(
-                            message: filePath,
-                            child: Text(getFileName(filePath)),
-                          ),
-                          const Spacer(),
-                          Text('${item.count}'),
-                        ],
-                      ),
-                    );
+                    return buildItem(value, item);
                   },
                 ),
               ),
@@ -83,6 +80,38 @@ class MainPage extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Widget buildItem(MainPageProvider provider, FileCount fileCount) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(5, 0, 12, 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: _getFileName(provider, fileCount),
+          ),
+          const SizedBox(width: 15),
+          Text('${fileCount.count}'),
+        ],
+      ),
+    );
+  }
+
+  Widget _getFileName(MainPageProvider provider, FileCount fileCount) {
+    var filePath = provider.filterDirPath(fileCount.file);
+    if (provider.useAbsolute) {
+      return Text(
+        filePath,
+        maxLines: 1,
+        overflow: TextOverflow.fade,
+        softWrap: false,
+      );
+    }
+    return MacosTooltip(
+      message: filePath,
+      child: Text(getFileName(filePath)),
     );
   }
 

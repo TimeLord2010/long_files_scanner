@@ -5,3 +5,5 @@ A multi platform file scanner that scan a choosen folder for files. It then, cou
 Created to analyse files that need to be refactored and split into multiple files in programming project.
 
 The maximum number of lines recommended is 400.
+
+![initial] https://1drv.ms/u/s!Ao2Ip2p_Lk0xi4wptTMGIxLfo7Js-w
